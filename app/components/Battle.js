@@ -18,7 +18,7 @@ function Instructions() {
                     <FaFighterJet className='bg-light' color='#727272' size={140} />
                 </li>
                 <li>
-                    <h3 className='header-sm'>Enter two Github users</h3>
+                    <h3 className='header-sm'>See the winners</h3>
                     <FaTrophy className='bg-light' color='rgb(255, 215, 0)' size={140} />
                 </li>
             </ol>
@@ -56,7 +56,7 @@ class PlayerInput extends React.Component {
                 <label htmlFor='username' className='player-label'>
                     {this.props.label}
                 </label>
-                <div>
+                <div className='row player-inputs'>
                     <input
                         type='text'
                         id='username'
@@ -85,10 +85,48 @@ PlayerInput.propTypes = {
 }
 
 export default class Battle extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            playerOne: null,
+            playerTwo: null,
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleSubmit(id, player) {
+        this.setState({
+            [id]: player
+        })
+    }
+
     render() {
+        const { playerOne, playerTwo } = this.state
+
         return (
             <>
                 <Instructions/>
+
+                <div className='players-container'>
+                    <h1 className='center-text header-lg'>Players</h1>
+                    <div className='row space-around'>
+                        {playerOne === null && (
+                            <PlayerInput
+                                label='Player One'
+                                onSubmit={(player) => this.handleSubmit('playerOne', player)}
+                            />
+                        )}
+
+                        {playerTwo === null && (
+                            <PlayerInput
+                                label='Player Two'
+                                onSubmit={(player) => this.handleSubmit('playerTwo', player)}
+                            />
+                        )}
+                    </div>
+                </div>
             </>
         )
     }
