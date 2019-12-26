@@ -1,5 +1,5 @@
 import React from 'react'
-import {ThemeConsumer} from '../contexts/Theme'
+import { ThemeConsumer } from '../contexts/Theme'
 
 export default function Nav () {
     return (
@@ -11,7 +11,7 @@ export default function Nav () {
                         className='btn-clear'
                         onClick={toggleTheme}
                     >
-                        {theme === 'light' ? 'Flashlight' : 'Lightbulb'}
+                        {theme === 'light' ? '🔦' : '💡'}
                     </button>
                 </nav>
             )}

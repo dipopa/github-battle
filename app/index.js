@@ -5,6 +5,7 @@ import Battle from './components/Battle';
 import './index.css';
 import { ThemeProvider } from "./contexts/Theme";
 import Nav from './components/Nav'
+import Popular from './components/Popular';
 
 class App extends React.Component {
     constructor(props) {
@@ -26,7 +27,7 @@ class App extends React.Component {
                 <div className='container'>
                   <Nav />
 
-                  <Battle />
+                  <Popular />
                 </div>
               </div>
             </ThemeProvider>
