@@ -6,9 +6,9 @@ import PropTypes from 'prop-types'
 import Loading from './Loading'
 import Tooltip from './Tooltip'
 import queryString from 'query-string'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-function ProfileList ({ profile }) {
+function ProfileList({ profile }) {
   return (
     <ul className='card-list'>
       <li>
@@ -18,7 +18,7 @@ function ProfileList ({ profile }) {
       {profile.location && (
         <li>
           <Tooltip text="User's location">
-            <FaCompass color='rgb(144, 115, 255)' size={22}/>
+            <FaCompass color='rgb(144, 115, 255)' size={22} />
             {profile.location}
           </Tooltip>
         </li>
@@ -26,7 +26,7 @@ function ProfileList ({ profile }) {
       {profile.company && (
         <li>
           <Tooltip text="User's company">
-            <FaBriefcase color='#795548' size={22}/>
+            <FaBriefcase color='#795548' size={22} />
             {profile.company}
           </Tooltip>
         </li>
@@ -48,76 +48,72 @@ ProfileList.propTypes = {
 }
 
 export default class Results extends React.Component {
-    constructor(props) {
-        super(props)
+  state = {
+    winner: null,
+    loser: null,
+    error: null,
+    loading: true
+  }
 
-        this.state = {
-            winner: null,
-            loser: null,
-            error: null,
-            loading: true
-        }
-    }
+  componentDidMount() {
+    const { playerOne, playerTwo } = queryString.parse(this.props.location.search)
 
-    componentDidMount () {
-      const { playerOne, playerTwo } = queryString.parse(this.props.location.search)
-
-      battle([ playerOne, playerTwo ])
-        .then((players) => {
-          this.setState({
-            winner: players[0],
-            loser: players[1],
-            error: null,
-            loading: false
-          })
-        }).catch(({ message }) => {
-            this.setState({
-              error: message,
-              loading: false
-            })
+    battle([playerOne, playerTwo])
+      .then((players) => {
+        this.setState({
+          winner: players[0],
+          loser: players[1],
+          error: null,
+          loading: false
         })
+      }).catch(({ message }) => {
+        this.setState({
+          error: message,
+          loading: false
+        })
+      })
+  }
+
+  render() {
+    const { winner, loser, error, loading } = this.state
+
+    if (loading === true) {
+      return <Loading text='Battling' />
     }
 
-    render() {
-        const { winner, loser, error, loading } = this.state
-
-        if (loading === true) {
-            return <Loading text='Battling' />
-        }
-
-        if (error) {
-            return (
-                <p className='center-text error'>{error}</p>
-            )
-        }
-        return (
-            <>
-              <div className='grid space-around container-sm'>
-                <Card
-                  header={winner.score === loser.score ? 'Tie' : 'Winner'}
-                  subheader={`Score: ${winner.score.toLocaleString()}`}
-                  avatar={winner.profile.avatar_url}
-                  href={winner.profile.html_url}
-                  name={winner.profile.login}
-                >
-                  <ProfileList profile={winner.profile} />
-                </Card>
-                <Card
-                  header={winner.score === loser.score ? 'Tie' : 'Loser'}
-                  subheader={`Score: ${loser.score.toLocaleString()}`}
-                  avatar={loser.profile.avatar_url}
-                  href={loser.profile.html_url}
-                  name={loser.profile.login}
-                >
-                  <ProfileList profile={loser.profile} />
-                </Card>
-              </div>
-              <Link
-                to='/battle'
-                className='btn btn-dark btn-space'>
-                  Reset
+    if (error) {
+      return (
+        <p className='center-text error'>{error}</p>
+      )
+    }
+    return (
+      <>
+        <div className='grid space-around container-sm'>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Winner'}
+            subheader={`Score: ${winner.score.toLocaleString()}`}
+            avatar={winner.profile.avatar_url}
+            href={winner.profile.html_url}
+            name={winner.profile.login}
+          >
+            <ProfileList profile={winner.profile} />
+          </Card>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Loser'}
+            subheader={`Score: ${loser.score.toLocaleString()}`}
+            avatar={loser.profile.avatar_url}
+            href={loser.profile.html_url}
+            name={loser.profile.login}
+          >
+            <ProfileList profile={loser.profile} />
+          </Card>
+        </div>
+        <Link
+          to='/battle'
+          className='btn btn-dark btn-space'>
+          Reset
               </Link>
-            </>
-        )
-    }
+      </>
+    )
+  }
 }
